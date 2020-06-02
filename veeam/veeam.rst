@@ -523,6 +523,7 @@ Veeamは、バックアップに関連付けられたVMディスクを仮想的�
 **バックアップブラウザ**を** Veeam Explorer **アプリケーションと組み合わせて使用して、Microsoft Active Directory、Exchange、SharePoint、SQL Server、およびOracleワークロードのアプリケーション対応のリストアを実行することもできます。
 
 .. _veeam-objects:
+
 （オプション）Nutanixオブジェクトをターゲットとして構成する
 +++++++++++++++++++++++++++
 
