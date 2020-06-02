@@ -565,9 +565,9 @@ Object StorageはAPIキーを使用してさまざまなバケットへのアク
 
    .. note::
 
-      Bucket names must be lower case and only contain letters, numbers, periods and hyphens.
-      Additionally, all bucket names must be unique within a given Object Store. Note that if you try to create a folder with an existing bucket name (e.g. *your-name*-my-bucket), creation of the folder will not succeed.
-      Creating a bucket in this fashion allows for self-service for entitled users, and is no different than a bucket created via the Prism Buckets UI.
+      バケット名は小文字でなければならず、文字、数字、ピリオド、ハイフンのみを含める必要があります。
+      さらに、すべてのバケット名は、特定のオブジェクトストア内で一意である必要があります。 既存のバケット名（* your-name * -my-bucketなど）でフォルダーを作成しようとすると、フォルダーの作成は成功しないことに注意してください。
+      この方法でバケットを作成すると、資格のあるユーザーにセルフサービスが可能になり、Prism Buckets UIで作成したバケットと同じです。
 
    .. figure:: images/buckets-2.png
 
@@ -581,7 +581,7 @@ Object StorageはAPIキーを使用してさまざまなバケットへのアク
 
    .. figure:: images/buckets-5.png
 
-Configure Nutanix Objects within Veeam
+VeeamにNutanix Objectsを設定
 ---------------------------------------
 
 #. Within the Veeam VBR console click on **Backup Infrastructure** > **Backup Repositories**.
@@ -615,29 +615,29 @@ Configure Nutanix Objects within Veeam
 
 #. Click Finish
 
-You can now configure backup jobs to leverage Nutanix Objects as an archival tier.
+Nutanixオブジェクトをアーカイブ層として活用するようにバックアップジョブを構成できるようになりました。
 
-Once VM backups are stored in the Veeam Backup Repository, Veeam offers backup copy functionality to create multiple instances of the same backup data in different locations.
+VMバックアップがVeeamバックアップリポジトリに格納されると、Veeamはバックアップコピー機能を提供して、同じ場所に同じバックアップデータの複数のインスタンスを作成します。
 
-Like primary backups configured through the AHV Backup Proxy, backup copy is a job-driven process. Veeam Backup & Replication fully automates the backup copy process and lets you specify retention settings to maintain the desired number of restore points, as well as full backups for archival purposes.
+AHVバックアッププロキシを介して構成されたプライマリバックアップと同様に、バックアップコピーはジョブ主導のプロセスです。 Veeam Backup＆Replicationは、バックアップコピープロセスを完全に自動化し、保存設定を指定して、目的の数の復元ポイントを維持し、アーカイブ目的で完全バックアップを行うことができます。
 
-Backup copy makes it simple to follow the "3-2-1" rule recommended by backup experts:
+バックアップコピーにより、バックアップの専門家が推奨する「3-2-1」ルールに従うことが簡単になります:
 
-- **3** - You must have at least three copies of your data: the original production data and two backups.
+- **3** - 元の本番データと2つのバックアップの3つ以上のデータのコピーが必要です。
 
-- **2** - You must use at least two different types of media to store the copies of your data (e.g. local disk and tape/cloud).
+- **2** - データのコピーを保存するには、少なくとも2種類のメディア（ローカルディスクとテープ/クラウドなど）を使用する必要があります。
 
-- **1** - You must keep at least one backup offsite (in the cloud or in a remote site).
+- **1** - 少なくとも1つのバックアップをオフサイト（クラウドまたはリモートサイト）に保持する必要があります。
 
-Takeaways
+まとめ
 +++++++++
 
 What are the key things you should know about **Veeam** and the **Backup Proxy for AHV**?
 
-- Veeam is a widely adopted backup technology that features native support for Nutanix AHV.
+- Veeamは広く採用されているバックアップテクノロジーで、Nutanix AHVのネイティブサポートを備えています。
 
-- The Veeam Backup Proxy for AHV provides a standalone HTML5 UI for Nutanix administrators to quickly perform backup and restore operations without access to the Veeam Backup & Replication Console.
+- AHV用のVeeam Backup Proxyは、Nutanix管理者がVeeam Backup＆Replication Consoleにアクセスせずにバックアップと復元操作をすばやく実行できるようにスタンドアロンのHTML5 UIを提供します。
 
-- Veeam provides agentless VM backup, integrating directly with Nutanix snapshots via API.
+- VeeamはエージェントレスVMバックアップを提供し、APIを介してNutanixスナップショットと直接統合します。
 
-- Veeam has advanced restore capabilities including support for file level restore, Microsoft Active Directory, Microsoft Exchange, Microsoft SQL Server, and Oracle.
+- Veeamには、ファイルレベルの復元、Microsoft Active Directory、Microsoft Exchange、Microsoft SQL Server、Oracleのサポートを含む高度な復元機能があります。
