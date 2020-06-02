@@ -112,7 +112,7 @@ Credentials
 
 .. note::
 
-  The *<Cluster Password>* is unique to each cluster and will be provided by the leader of the Workshop.
+   *<Cluster Password>* は全クラスタ共通のものを利用します。
 
 .. list-table::
    :widths: 25 35 40
