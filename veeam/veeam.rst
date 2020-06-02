@@ -632,7 +632,7 @@ AHVバックアッププロキシを介して構成されたプライマリバ�
 まとめ
 +++++++++
 
-What are the key things you should know about **Veeam** and the **Backup Proxy for AHV**?
+VeeamとAHVのバックアッププロキシについて知っておくべき重要なこと
 
 - Veeamは広く採用されているバックアップテクノロジーで、Nutanix AHVのネイティブサポートを備えています。
 
