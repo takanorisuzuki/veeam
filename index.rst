@@ -168,11 +168,10 @@ Credentials
 アクセス手順
 +++++++++++++++++++
 
-Lab Access User Credentials
+ラボアクセスユーザー情報
 ...........................
 
-PHX Based Clusters:
-**Username:** PHX-POCxxx-User01 (最大20ユーザーまで、PHX-POCxxx-User20), **Password:** *<Provided by Instructor>*
+**Username:** PHX-POCxxx-User01からPHX-POCxxx-User20, **Password:** *<Provided by Instructor>*
 
 
 Frame VDI
