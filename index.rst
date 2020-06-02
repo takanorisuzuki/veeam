@@ -179,10 +179,6 @@ Frame VDI
 
 ログイン先: https://frame.nutanix.com/x/labs
 
-**Nutanix Employees** - Use your **NUTANIXDC** credentials
-**Non-Employees** - Use **Lab Access User** Credentials
-
-
 ソフトウェアバージョン
 ++++++++++++++++++++
 
