@@ -1,53 +1,54 @@
 .. _veeam:
 
 ---------------------------------------------
-Veeam Backup and Replication
+Veeam バックアップ&レプリケーション
 ---------------------------------------------
 
-*The estimated time to complete this lab is 60 minutes.*
+*このラボの所要時間は60分です。*
 
-Overview
+概要
 ++++++++
 
-**In this exercise you will connect to a Veeam Backup Server, deploy and configure a Backup Proxy for AHV, configure the connection to your Nutanix cluster and existing Veeam Backup & Replication infrastructure, and execute backup and restore operations.**
+**この演習では、Veeam Backup Serverに接続し、AHVのバックアッププロキシを展開して構成し、Nutanixクラスターと既存のVeeam Backup＆Replicationインフラストラクチャへの接続を構成し、バックアップおよび復元操作を実行します。**
 
 
-A Note About Nutanix Mine
+Nutanix Mineに関するノート
 +++++++++++++++++++++++++
 
 .. figure:: images/mineveeam.png
 
-While this lab focuses on configuring Veeam and backup jobs within Veeam for AHV clusters, it's worth noting that many of the same components and principals apply to Nutanix Mine with Veeam. Some key points to highlight about Mine with Veeam:
+このラボでは、AHVクラスター用のVeeamおよびバックアップジョブの構成に焦点を当てていますが、同じコンポーネントとプリンシパルの多くがVeeamを搭載したNutanix Mineに適用されることは注目に値します。 MINE with Veeamについての重要なポイント:
 
-- Nutanix Mine is a dedicated secondary storage backup appliance running on pre-validated NX- hardware (HX and DX Support are coming soon)
+- Nutanix Mineは、事前検証済みのNX-ハードウェアで実行される専用のセカンダリストレージバックアップアプライアンスです（HXおよびDXサポートは近日提供予定）。
 
+  - XSmall
   - Small
   - Medium
   - Scale-out with the option to leverage Nutanix Objects
-- Standard Foundation is run to image and create an AHV cluster
-- "Foundation for Mine" VM image is uploaded and run after AOS and AHV are imaged on a Mine appliance
-- The Foundation for Mine VM automates via a web interface similar to Standard Foundation:
+- 一般的なFoundationは、AHVクラスターをイメージ化および作成するために実行されます
+- "Foundation for Mine"はMINE専用のVMイメージがアップロードされ、AOSとAHVがMineアプライアンスでイメージ化された後に実行されます
+- Foundation for Mine VMは、Standard Foundationと同様のWebインターフェイスを介して自動化します:
 
-  - Nutanix Container Creation
-  - Nutanix Volume Group Creation
-  - Deployment of the Veeam backup components on the Mine cluster
+  - Nutanixコンテナの作成
+  - Nutanix Volume Groupの作成
+  - MineクラスターへのVeeamバックアップコンポーネントのデプロイ
 
     - Veeam VBR
-    - Veeam Repository VMs with Nutanix Volume Groups attached
-    - Veeam Windows Proxies
-  - Deployment of a custom Prism Element Dashboard for Nutanix Mine
+    - Nutanix Volume GroupsがアタッチされたVeeam Repository VM
+    - Veeam Windows プロキシ
+  - Nutanix Mine用のカスタムPrism Elementダッシュボードの導入
 
 .. figure:: images/mine_dashboard.png
 
-Because we are using shared clusters here at Nutanix Global Tech Summit, we cannot deploy Nutanix Mine with Veeam to the lab clusters, but for more information, including details, setup instructions, and sales assets, check out `<https://ntnx.tips/mine>`_
+今回はNeetanix Mine with Veeamをラボクラスターにデプロイすることはできませんが、詳細、設定手順はこちらにあります。 `<https://ntnx.tips/mine>`_
 
 
-Deploying Veeam Backup Server
+Veeam Backup Serverのデプロイ
 +++++++++++++++++++++++++++++
 
-.. note:: By default the Veeam Backup Server will deploy a Windows SQL Server Express database instance. A production Veeam deployment would use an external, highly available database.
+.. note:: デフォルトでは、Veeam Backup ServerはWindows SQL Server Expressデータベースインスタンスをデプロイします。 本番Veeamデプロイメントでは、外部の高可用性データベースを使用します。
 
-The Veeam Backup Server is the main management component in the Veeam backup infrastructure. The Veeam Backup Server is responsible for managing Veeam backup repositories that are used as a target for backup. The Veeam Backup & Replication Console is also used for granular VM restore operations such as restoring individual files, AD objects, Exchange mailboxes, and SQL/Oracle databases.
+Veeamバックアップサーバーは、Veeamバックアップインフラストラクチャの主要な管理コンポーネントです。 Veeam Backup Serverは、バックアップのターゲットとして使用されるVeeamバックアップリポジトリの管理を担当します。 Veeam Backup＆Replication Consoleは、個々のファイル、ADオブジェクト、Exchangeメールボックス、SQL / Oracleデータベースの復元など、VMの詳細な復元操作にも使用されます。
 
 #. In **Prism > VM > Table**, click **+ Create VM**.
 
@@ -89,123 +90,123 @@ The Veeam Backup Server is the main management component in the Veeam backup inf
 
     The Unattend script will disable the Windows Firewall.
 
-#. Select the *Initials*\ **-VeeamServer** VM and click **Power on**.
+#. *Initials*\ **-VeeamServer** VMを選択し **Power on** をクリックします。
 
-#. Once the VM has started, connect via RDP or click **Launch Console**.
+#. VMが正常に起動したらRDPで接続するか **Launch Console** をクリックします。
 
    .. note::
 
-     It is recommended that the VM be accessed via Microsoft RDP, enabling you to copy and paste text from the lab guide into the VM. The Sysprep process will take approximately 2 minutes before the VM can be accessed via RDP.
+     ラボガイドからVMにテキストをコピーして貼り付けることができるように、Microsoft RDP経由でVMにアクセスすることをお勧めします。 Sysprepプロセスは、RDP経由でVMにアクセスできるようになるまでに約2分かかります。
 
      - **Username** - Administrator
      - **Password** - nutanix/4u
 
-#. Open **PowerShell** and execute the following command:
+#. **PowerShell** を開き、以下のコマンドを入力します:
 
    .. code-block:: Powershell
      :emphasize-lines: 1
 
      Get-Disk | Where partitionstyle -eq 'raw' | Initialize-Disk -PartitionStyle MBR -PassThru | New-Partition -AssignDriveLetter -UseMaximumSize | Format-Volume -FileSystem NTFS -NewFileSystemLabel "Backups" -Confirm:$false
 
-   .. note:: Windows Explorer may prompt you to format the disk - you can cancel this prompt as the Powershell scriptlet above will format the disk for you
+   .. note:: Windows Explorerがディスクのフォーマットを要求する場合があります-上記のPowershellスクリプトレットがディスクをフォーマットするため、このプロンプトをキャンセルできます
 
-#. On the Veeam Server, right-click the start menu and select **System**. In the **Hostname, domain, and workgroup settings** section, click on "Change settings," then click **Change** to rename the server within Windows to match the VM name *Initials*\ **-VeeamServer**. When prompted, restart the server
+#. Veeamサーバーで、スタートメニューを右クリックして、[**システム**]を選択します。 [**ホスト名、ドメイン、ワークグループの設定**]セクションで、[設定の変更]をクリックし、[**変更**]をクリックして、Windows内のサーバーの名前をVM名と一致するように変更します*初期* \ **-VeeamServer ** 。 プロンプトが表示されたら、サーバーを再起動します。
 
    .. figure:: images/0aa.png
 
-#. Open the **Veeam Backup and Replication 10** Setup from the mounted .iso image (you may need to open the Setup.exe executable on the disk). Click **Install**.
+#. マウントされた.isoイメージから** Veeam Backup and Replication 10 **セットアップを開きます（ディスク上の実行可能ファイルSetup.exeを開く必要がある場合があります）。 [**インストール**]をクリックします。
 
    .. figure:: images/0a.png
 
-   The installer may install some pre-requisites and require a reboot. Follow the prompts to install the Veeam Backup and Replication Server.
+   インストーラーはいくつかの前提条件をインストールし、再起動が必要な場合があります。 プロンプトに従って、Veeam Backup and Replication Serverをインストールします。
 
-#. Accept the license agreements and click **Next**.
+#. 使用許諾契約に同意し、[**次へ**]をクリックします。
 
-#. Download the NFR license for the Veeam Backup and Replication Server, located `Here <http://10.42.194.11/images/Veeam/VBRv10RTM/Veeam-100instances-suite-nfr.lic>`_ You can download the file to your local machine then copy and paste the file into the RDP session
+#. `こちら<http://10.42.194.11/images/Veeam/VBRv10RTM/Veeam-100instances-suite-nfr.lic>` _にあるVeeam Backup and Replication ServerのNFRライセンスをダウンロードします。ローカルにファイルをダウンロードできます 次に、ファイルをコピーしてRDPセッションに貼り付けます
 
-#. Click **Browse** and select the downloaded Veeam NFR license file. Click **Next > Next**.
+#. [**参照**]をクリックして、ダウンロードしたVeeam NFRライセンスファイルを選択します。 [**次へ]> [次へ**]をクリックします。
 
-#. If prompted for missing pre-requisite components, click **Install**. After completion, click **Next**.
+#. 欠落している必須コンポーネントを要求されたら、[**インストール**]をクリックします。 完了したら、[**次へ**]をクリックします。
 
    .. figure:: images/0b.png
 
-#. Review the configuration and click **Install**.
+#. 設定を確認し、[**インストール**]をクリックします。
 
    .. figure:: images/0c.png
 
-#. While the installation completes, you can create the necessary DNS entry for the Veeam VBR Server. Open a Console to AutoAD, login using Administrator credentials:
+#. インストールが完了する間、Veeam VBRサーバーに必要なDNSエントリを作成できます。 AutoADのコンソールを開き、管理者の資格情報を使用してログインします:
      - **Username:** Administrator
      - **Password:** nutanix/4u
 
-#. Open the DNS console by navigating to Start > Windows Administration Tools > DNS. Navigate to DC > Forward Lookup Zones > ntnxlab.local.
+#. [スタート]> [Windows管理ツール]> [DNS]に移動して、DNSコンソールを開きます。 DC>前方参照ゾーン> ntnxlab.localに移動します。
 
-#. Create an A record for your xyz-VeeamServer that matches the IP address that was assigned via DHCP. Ensure the "Create associated pointer (PTR) record"
+#. DHCPを介して割り当てられたIPアドレスと一致するxyz-VeeamServerのAレコードを作成します。 「関連ポインター（PTR）レコードの作成」を確認します。
 
    .. figure:: images/0d.png
 
-#. After the installation completes, we need to install the Veeam Nutanix AHV Plugin on the Veeam Backup and Replication Server. You can download the plugin to the xyz-VeeamServer using this `Link <http://10.42.194.11/images/Veeam/VBRv10RTM/NutanixAHVPlugin_10.0.0.908.exe>`_
+#. インストールが完了したら、Veeam Nutanix AHVプラグインをVeeam Backup and Replication Serverにインストールする必要があります。 この `リンク<http://10.42.194.11/images/Veeam/VBRv10RTM/NutanixAHVPlugin_10.0.0.908.exe>` _を使用して、プラグインをxyz-VeeamServerにダウンロードできます。
 
-#. Launch the installer and follow the prompts to install the Nutanix AHV Plugin on the Veeam Server:
+#. インストーラーを起動し、プロンプトに従ってNutanix AHVプラグインをVeeamサーバーにインストールします。:
 
    .. figure:: images/0e.png
 
-By default the Veeam Backup Server will deploy a Windows SQL Server Express database instance. A production Veeam deployment would use an external, highly available database.
+デフォルトでは、Veeam Backup ServerはWindows SQL Server Expressデータベースインスタンスをデプロイします。 本番Veeamデプロイメントでは、外部の高可用性データベースを使用します。
 
-The installer will also create a Veeam Backup Repository to act as a backup target, by default it will select the volume with the most free space exposed to the backup server (the local 250GB disk added to the *Initials*\ **-VeeamServer** VM).
+インストーラーは、バックアップターゲットとして機能するVeeamバックアップリポジトリも作成します。デフォルトでは、バックアップサーバーに公開されている空き容量が最も多いボリュームが選択されます（* Initials * \ **-VeeamServer *に追加されたローカル250GBディスク） * VM）。
 
-For storing backups of Nutanix AHV VMs, Veeam currently supports the use of simple backup repositories (any Windows-compatible file or block storage), scale-out backup repositories, and ExaGrid appliances. With the release of v10, DellEMC Data Domain DD Boost and HPE StoreOnce Catalyst proprietary storage protocols are now supported for Veeam Availability for Nutanix.
+Nutanix AHV VMのバックアップを保存するために、Veeamは現在、単純なバックアップリポジトリ（Windows互換のファイルまたはブロックストレージ）、スケールアウトバックアップリポジトリ、およびExaGridアプライアンスの使用をサポートしています。 v10のリリースにより、DellEMC Data Domain DD BoostおよびHPE StoreOnce Catalyst独自のストレージプロトコルが、Veeam Availability for Nutanixでサポートされるようになりました。
 
 
 Veeam Backup Proxy
 ++++++++++++++++++++++++++++
 
-The Backup Proxy is a Linux based virtual appliance that performs the role of a coordinator between the Nutanix platform and Veeam Backup & Replication. Veeam introduced support for Nutanix AHV back in 2018 with its Veeam Availability for Nutanix, or VAN, version 1 virtual appliance. This virtual appliance could be deployed to each AHV cluster to be backed up via Veeam. Since its initial release, there have been three major updates, the latest being Update 3 release in November of 2019, which includes a number of performance upgrades and bug fixes.
+バックアッププロキシはLinuxベースの仮想アプライアンスであり、NutanixプラットフォームとVeeam Backup＆Replicationの間のコーディネーターの役割を果たします。 Veeamは、NutanixまたはVANバージョン1の仮想アプライアンス用のVeeam Availabilityを使用して、2018年にNutanix AHVのサポートを導入しました。 この仮想アプライアンスを各AHVクラスターに展開して、Veeam経由でバックアップできます。 最初のリリース以降、3つの主要な更新が行われました。最新の更新は2019年11月のUpdate 3リリースで、パフォーマンスのアップグレードとバグ修正が多数含まれています。
 
-And while the VAN provided basic backup capabilities for workloads running on AHV, Veeam has added additional enhancements for AHV, aligned with its Backup and Replication version 10 release. The new appliance is named the "Veeam Backup and Replication AHV Backup Proxy" (but is often referred to as VANv2)
+また、VANはAHVで実行されるワークロードに基本的なバックアップ機能を提供しましたが、VeeamはAHVの追加の拡張機能を追加し、バックアップとレプリケーションのバージョン10リリースに合わせています。 新しいアプライアンスは「Veeam Backup and Replication AHV Backup Proxy」と呼ばれます（ただし、多くの場合VANv2と呼ばれます）
 
-New features released with v10 include:
+v10でリリースされた新機能は次のとおりです:
 
-- Veeam Backup and Replication Console Integration
+- Veeamバックアップとレプリケーションコンソールの統合
 
-  - AHV Cluster Registration from the VBR Console
-  - Central deployment from the Veeam VBR Console
-  - Integrated License Management for AHV Backup Proxy
+  - VBRコンソールからのAHVクラスター登録
+  - Veeam VBRコンソールからのデプロイ
+  - AHVバックアッププロキシのライセンス統合管理
 
-- Backup Features
+- バックアップ機能
 
-  - Nutanix snapshot-aware
-  - Linux File-level Restore (FLR)
-  - Option to Keep or Overwrite Files
-  - Instant VM Recovery (note it requires a vSphere host to run the recovered VM)
-  - Support for VeeamZip
-  - Native Deduplication appliance support
+  - Nutanix スナップショット連携
+  - Linux ファイルレベルリストア (FLR)
+  - ファイルを保持または上書きするオプション
+  - インスタントVMリカバリ (リカバリされたVMを実行するにはvSphereホストが必要です)
+  - VeeamZipのサポート
+  - ネイティブの重複排除アプライアンスのサポート
 
     - DellEMC Data Domain DD Boost
     - HPE StoreOnce Catalyst
-  - Multi-user access to the UI
-  - Email Job Status Notification
-  - Drive Exclusions for VMs
-  - Ability to schedule Active Full Backups via the Veeam VBR Console
+  - UIへのマルチユーザーアクセス
+  - メールステータス通知
+  - VMのドライブの除外
+  - Veeam VBRコンソールを介してアクティブフルバックアップをスケジュールする機能
 
-- Veeam ONE Monitoring and Reporting
+- Veeam ONEの監視とレポート
 
-  - Backup Job Performance and Statistics
-  - Triggered Alarms
-  - Enumerated Protected VMs
+  - バックアップジョブのパフォーマンスと統計
+  - アラームトリガー
+  - 保護されたVM一覧
 
-- Support for Nutanix and Veeam Community Edition
+- NutanixおよびVeeam Community Editionのサポート
 
 
-The Backup Proxy communicates with the AHV platform via Nutanix REST API, assigns necessary resources for backup and restore operations, reads/writes data from/to Nutanix storage containers and transports VM data to/from target Veeam backup repositories. The Backup Proxy is also responsible for job management and scheduling, data compression and deduplication, and applying retention policy settings to backup chains.
+バックアッププロキシは、Nutanix REST APIを介してAHVプラットフォームと通信し、バックアップおよび復元操作に必要なリソースを割り当て、Nutanixストレージコンテナーとの間でデータを読み書きし、ターゲットVeeamバックアップリポジトリとの間でVMデータを転送します。 バックアッププロキシは、ジョブの管理とスケジューリング、データの圧縮と重複排除、およびバックアップチェーンへの保持ポリシー設定の適用も行います。
 
-Each Nutanix cluster leveraging Veeam for backup will require its own Backup Proxy VM.
+バックアップにVeeamを利用する各Nutanixクラスタには、独自のバックアッププロキシVMが必要です。
 
-With the release of the new AHV Backup proxy, we can deploy it automatically from the VBR Console itself rather than having to spin up a VM manually on each cluster we wish to backup. To do so, login to the VBR VM and launch the Veeam VBR Console
+新しいAHVバックアッププロキシのリリースにより、バックアップする各クラスターでVMを手動で起動する必要がなく、VBRコンソール自体から自動的に展開できます。 これを行うには、VBR VMにログインしてVeeam VBRコンソールを起動します。
 
-Deploying the AHV Backup Proxy
+AHVバックアッププロキシの展開
 ------------------------------
 
-#. From the Nutanix cluster, navigate to Settings > Local User Management and select + New User. Create a local user named "xyzveeam," where xyz are your initials:
+#. Nutanixクラスタから、[設定]> [ローカルユーザー管理]に移動し、[+新しいユーザー]を選択します。 「xyzveeam」という名前のローカルユーザーを作成します。ここで、xyzはイニシャルです:
 
    - User: xyzveeam
    - Password: nutanix/4u
@@ -214,49 +215,49 @@ Deploying the AHV Backup Proxy
    - E-mail: xyz-veeam@ntnxlab.local
 
 
-#. Grant the user *Cluster Admin* privileges then click Save
+#. ユーザーに*クラスタ管理者*権限を付与し、[保存]をクリックします
 
    .. figure:: images/0.png
 
-#. Use Remote Desktop or the VM console to connect to your Veeam VBR VM you deployed earlier and launch the Veeam Backup and Replication console
+#. リモートデスクトップまたはVMコンソールを使用して、以前に展開したVeeam VBR VMに接続し、Veeamバックアップおよびレプリケーションコンソールを起動します。
 
-#. Navigate to "Backup Infrastructure"
+#. 「バックアップインフラストラクチャ」に移動します
 
-#. Under Managed Servers, right-click on "Managed Servers" and select "Add Server"
+#. [管理対象サーバー]で、[管理対象サーバー]を右クリックし、[サーバーの追加]を選択します
 
    .. figure:: images/2.png
 
-#. Click on "Nutanix AHV"
+#. 「Nutanix AHV」をクリックします
 
-#. Enter the IP address of your cluster, then click Next>
+#. クラスタのIPアドレスを入力し、[次へ]をクリックします。
 
    .. figure:: images/3.png
 
-#. For credentials, click "Add..."
+#. 資格情報については、[追加...]をクリックします
 
-#. Enter the credentials you had specified earlier on the Nutanix Cluster (xyzveeam / nutanix/4u). Click OK, then Next >
+#. Nutanixクラスター（xyzveeam / nutanix / 4u）で前に指定した資格情報を入力します。 [OK]をクリックし、[次へ]>
 
    .. figure:: images/5.png
 
-   .. note:: You will be prompted by a Security Warning when the Veeam Server connects to Prism. Click **Continue**
+   .. note:: VeeamサーバーがPrismに接続すると、セキュリティ警告が表示されます。 [**続行**]をクリックします
 
-#. Select the Default Storage Container and change the Network to "Secondary" by using the "Choose" button to the right. There's no need to specify a static IP address on this pane, so click Next >
+#. デフォルトのストレージコンテナを選択し、右側の[選択]ボタンを使用してネットワークを[セカンダリ]に変更します。 このペインでは静的IPアドレスを指定する必要がないため、[次へ]をクリックします。
 
    .. figure:: images/6.png
 
-#. The VBR will add the Nutanix Cluster as a managed server. When complete, click Next >
+#. VBRは、Nutanixクラスターを管理対象サーバーとして追加します。 完了したら、[次へ]をクリックします>
 
    .. figure:: images/7.png
 
-#. Click Finish. We now need to deploy a Backup Proxy for AHV to the cluster. The VBR will automatically prompt you to do so. Choose **No** from the prompt
+#. 完了をクリックします。 次に、AHVのバックアッププロキシをクラスターに展開する必要があります。 VBRは自動的にそうするように促します。 プロンプトから[**いいえ**]を選択します
 
    .. figure:: images/8.png
 
-   .. note:: With VBR v10, Veeam supports the ability to deploy the Backup Proxy for AHV from the VBR console, however with this pre-production release here at Tech Summit the deployment fails, so we will manually deploy the Veeam Nutanix AHV Backup Proxy Manually and import it into the VBR
+   .. note:: VBR v10では、VeeamはVBRコンソールからAHVのバックアッププロキシを展開する機能をサポートしますが、現在のリリースでは展開が失敗するため、手動でVeeam Nutanix AHVバックアッププロキシを展開してVBRにインポートします
 
-#. From Prism, click **+ Create VM** to create a new VM.
+#. Prismから[** + Create VM **]をクリックして、新しいVMを作成します。
 
-#. Fill out the following fields and click **Save**:
+#. 次のフィールドに入力して、[**保存**]をクリックします:
 
    - **Name** - *Initials*\ -VeeamAHVProxy
    - **vCPU(s)** - 4
@@ -272,31 +273,31 @@ Deploying the AHV Backup Proxy
      - **VLAN Name** - Secondary
      - Select **Add**
 
-#. Power on the VM. The VM will boot. After boot completes, note the IP address the Veeam Backup Proxy was assigned from DHCP.
+#. VMの電源を入れます。 VMが起動します。 起動が完了したら、Veeam Backup ProxyがDHCPから割り当てられたIPアドレスをメモします。
 
    .. figure:: images/9.png
 
-#. As done for the Veeam VBR Server, navigate to the AutoDC VM, launch the DNS console, navigate to DC > Forward Lookup Zones > ntnxlab.local.
+#. Veeam VBRサーバーの場合と同様に、AutoDC VMに移動し、DNSコンソールを起動して、DC> Forward Lookup Zones> ntnxlab.localに移動します。
 
-#. Create an A record using the IP address that was assigned to the Veeam Backup Proxy:
+#. Veeam Backup Proxyに割り当てられたIPアドレスを使用してAレコードを作成します:
 
    .. figure:: images/1.png
 
-#. Once the VM has started, open \https://<*VeeamProxy-VM-IP*>:8100/ in a browser. Log in using the default credentials:
+#. VMが起動したら、ブラウザーで\ https：// <* VeeamProxy-VM-IP *>：8100 /を開きます。 デフォルトの認証情報を使用してログインします:
 
    - **Username** - veeam
    - **Password** - veeam
 
    .. figure:: images/16.png
 
-#. After authenticating, choose the option to Install
+#. 認証後、インストールするオプションを選択します
 
    .. figure:: images/installproxy1.png
 
 
-#. Accept the EULA and click Next
+#. EULAに同意して[次へ]をクリックします
 
-#. Specify new credentials for the user **veeam**:
+#. ユーザー** veeam **の新しい資格情報を指定します:
 
    - **Login:** veeam
    - **Old password:** veeam
@@ -305,59 +306,59 @@ Deploying the AHV Backup Proxy
 
    .. figure:: images/installproxy2.png
 
-#. Enter the Proxy name you had specified earlier when creating the VM. Leave the default network options selected
+#. VMの作成時に以前に指定したプロキシ名を入力します。 デフォルトのネットワークオプションを選択したままにします
 
    .. figure:: images/installproxy3.png
 
-#. Review the summary and click Finish. The AHV Proxy appliance will apply settings and reload.
+#. 概要を確認し、[完了]をクリックします。 AHVプロキシアプライアンスは設定を適用し、リロードします。
 
-#. Return to the Veeam Backup and Replication Console within the Veeam Server Windows session. Click on Backup Infrastructure, right-click on **Backup Proxies** and select **Add Nutanix backup proxy...**
+#. Veeam Server Windowsセッション内のVeeam Backup and Replication Consoleに戻ります。 [バックアップインフラストラクチャ]をクリックし、[**バックアッププロキシ**]を右クリックして[** Nutanixバックアッププロキシを追加... **]を選択します。
 
    .. figure:: images/10.png
 
-#. Select **Connect proxy**
+#. [**プロキシを接続**]を選択します
 
    .. figure:: images/10a.png
 
-#. Select the following options in the prompt:
+#. プロンプトで次のオプションを選択します:
 
    - **Cluster:** <your cluster>
    - **Name:** *Initials*\ -VeeamAHVProxy
 
    Click **Next >**
 
-#. Leave default network options, then click **Next >**
+#. デフォルトのネットワークオプションをそのままにして、[** Next> **]をクリックします。
 
-#. Click **Add..** to add the Backup Proxy credentials:
+#. [**追加。**]をクリックして、バックアッププロキシの認証情報を追加します:
 
    - **Username:** veeam
    - **Password:** nutanix/4u
 
    Click **Next >**
 
-#. Leave the default Access Permissions
+#. デフォルトのアクセス許可のままにします
 
    .. figure:: images/12.png
 
-   .. note:: You will be prompted by a Security Warning when the Veeam Server connects to Prism. Click **Continue**
+   .. note:: VeeamサーバーがPrismに接続すると、セキュリティ警告が表示されます。 [**続行**]をクリックします
 
-#. The VBR will add the AHV Backup Proxy we deployed. Click **Next >**
+#. VBRは、展開したAHVバックアッププロキシを追加します。 [**次へ> **]をクリックします
 
    .. figure:: images/13.png
 
-#. Clic **Finish** on the Summary screen
+#. 概要画面で[**完了**]をクリックします
 
 
-Backing Up A VM
+VMのバックアップ
 +++++++++++++++
 
-Veeam Backup & Replication backs up Nutanix AHV VMs at the image level, just like VMware vSphere and Microsoft Hyper-V VMs. The Backup Proxy communicates with Nutanix AHV to trigger a VM snapshot, retrieves VM data block by block from Storage Containers hosting VMs, compresses and deduplicates the data, and writes to the Backup Repository in Veeam’s proprietary format.
+Veeam Backup＆Replicationは、VMware vSphereやMicrosoft Hyper-V VMと同様に、Nutanix AHV VMをイメージレベルでバックアップします。 バックアッププロキシは、Nutanix AHVと通信してVMスナップショットをトリガーし、VMをホストしているストレージコンテナーからブロックごとにVMデータを取得し、データを圧縮して重複排除し、Veeam独自の形式でバックアップリポジトリに書き込みます。
 
-For AHV VMs, the Veeam Backup & Replication backup proxy copies the whole content of the VM and creates a full backup file (VBK) in the target location. The full backup file acts as a starting point of the backup chain, where format subsequent backup sessions, Veeam copies only those data blocks that have changed since the previous backup, and stores these data blocks to an incremental backup file in the target location. Incremental backup files depend on the full backup file and preceding incremental backup files in the backup chain. The Backup Proxy integrates with Nutanix's Change Block Tracking (CBT) API to determine the changed portion of a VM's data to enable efficient, incremental backups. With the new version of the AHV backup proxy, administrator can now schedule both full or incremental backups (whereas in the previous version, after the first full backup was taken, all subsequent backups were incrementals)
+AHV VMの場合、Veeam Backup＆ReplicationバックアッププロキシはVMのコンテンツ全体をコピーし、ターゲットの場所に完全バックアップファイル（VBK）を作成します。 フルバックアップファイルは、バックアップチェーンの開始点として機能し、後続のバックアップセッションをフォーマットします。Veeamは、前回のバックアップ以降に変更されたデータブロックのみをコピーし、これらのデータブロックをターゲットの場所の増分バックアップファイルに保存します。 増分バックアップファイルは、完全バックアップファイルと、バックアップチェーン内の先行する増分バックアップファイルに依存しています。 バックアッププロキシは、NutanixのChange Block Tracking（CBT）APIと統合して、VMのデータの変更された部分を特定し、効率的な増分バックアップを可能にします。 AHVバックアッププロキシの新しいバージョンでは、管理者は完全バックアップまたは増分バックアップの両方をスケジュールできるようになりました（以前のバージョンでは、最初の完全バックアップが作成された後、後続のすべてのバックアップは増分バックアップでした）。
 
-#. In **Prism > VM > Table**, click **+ Create VM**.
+#. ** Prism> VM> Table **で、[** + Create VM **]をクリックします。
 
-#. Fill out the following fields and click **Save**:
+#. 次のフィールドに入力して、[**保存**]をクリックします:
 
    - **Name** - *Initials*\ -VeeamBackupTest
    - **vCPU(s)** - 2
@@ -373,35 +374,35 @@ For AHV VMs, the Veeam Backup & Replication backup proxy copies the whole conten
      - **VLAN Name** - Secondary
      - Select **Add**
 
-#. Select the *Initials*\ **-VeeamBackupTest** VM and click **Power on**.
+#. * Initials * \ **-VeeamBackupTest ** VMを選択し、[** Power on **]をクリックします。
 
-#. Once the VM has started, click **Launch Console**. Complete the Sysprep process and provide a password for the local Administrator account.
+#. VMが起動したら、[** Launch Console **]をクリックします。 Sysprepプロセスを完了し、ローカル管理者アカウントのパスワードを入力します。
 
-#. Log in as the local Administrator and create multiple files on the desktop (e.g. documents, images, etc.).
+#. ローカル管理者としてログインし、デスクトップに複数のファイル（ドキュメント、画像など）を作成します。
 
    .. figure:: images/17.png
 
-#. Login to the Veeam Backup Proxy web console (https://<ip_address>:8100). From the **Veeam Backup Proxy Web Console**, select **Jobs** from the toolbar.
+#. Veeam Backup Proxy Webコンソール（https：// <ip_address>：8100）にログインします。 ** Veeam Backup Proxy Webコンソール**で、ツールバーから[**ジョブ**]を選択します。
 
    .. figure:: images/18.png
 
-#. Click **+ Add**, provide a name for the backup job (e.g. *Initials*\ -DevVMs), leave the default option of "Backup job" and click **Next**.
+#. [** +追加**]をクリックし、バックアップジョブの名前（* Initials * \ -DevVMsなど）を入力し、デフォルトのオプションである[バックアップジョブ]のままにして、[**次へ**]をクリックします。
 
    .. figure:: images/19.png
 
-#. Click **+ Add** and search for the VM you created for this exercise. Click **Add > Next**.
+#. [** +追加**]をクリックして、この演習用に作成したVMを検索します。 ** [追加]> [次へ**]をクリックします。
 
    .. figure:: images/20.png
 
 .. note::
 
-  Dynamic Mode allows you to backup all VMs within a Nutanix Protection Domain. This could make configuration of a backup job simpler if you are already taking advantage of Nutanix PDs, it will also ensure any new VMs added to the PD are backed up by Veeam without having to modify the job.
+  動的モードでは、Nutanix保護ドメイン内のすべてのVMをバックアップできます。 これにより、すでにNutanix PDを利用している場合、バックアップジョブの構成が簡単になります。また、PDに追加されたすべての新しいVMが、ジョブを変更せずにVeeamによってバックアップされるようになります。
 
-Select **Default Backup Repository** and click **Next**. This is the 250GB disk attached to the *Initials*\ **-VeeamServer** VM, but other supported Veeam backup repositories could be selected if available in the environment.
+[**デフォルトのバックアップリポジトリ**]を選択し、[**次へ**]をクリックします。 これは、* Initials * \ **-VeeamServer ** VMに接続されている250GBのディスクですが、環境で使用可能な場合は、サポートされている他のVeeamバックアップリポジトリを選択できます。
 
 .. figure:: images/21.png
 
-Fill out the following fields and click **Next**:
+次のフィールドに入力して、[**次へ**]をクリックします。:
 
 - Select **Run this job automatically**
 - Select **Periodically every:**
@@ -411,126 +412,127 @@ Fill out the following fields and click **Next**:
 
 .. figure:: images/22.png
 
-Select **Run backup job when I click Finish** and click **Finish**.
+[**完了をクリックしたらバックアップジョブを実行する**]を選択し、[**終了**]をクリックします。
 
-Monitor the progress of until the initial full backup completes successfully. The initial backup should take approximately 2-5 minutes. Click **Close**.
+最初の完全バックアップが正常に完了するまでの進行状況を監視します。 最初のバックアップには約2〜5分かかります。 [**閉じる**]をクリックします。
 
 .. figure:: images/23.png
 
 .. note::
 
-  You can click **Close** without interrupting the backup job. To view job progress again click the **Running** link under **Status** of the backup job.
+  バックアップジョブを中断せずに[**閉じる**]をクリックできます。 ジョブの進行状況を再度表示するには、バックアップジョブの[**ステータス**]の下にある[**実行中**]リンクをクリックします。
 
-Return to your *Initials*\ **-VeeamBackupTest** VM console and make some small changes (e.g. downloading wallpaper images from the Internet, installing an application, etc.)
+* Initials * \ **-VeeamBackupTest ** VMコンソールに戻り、いくつかの小さな変更（インターネットからの壁紙画像のダウンロード、アプリケーションのインストールなど）を行います。
 
-From the **Veeam Backup Proxy Web Console > Backup Jobs**, select your job and click **Start** to manually trigger an incremental backup to add to the backup chain.
+** Veeam Backup Proxy Webコンソール>バックアップジョブ**からジョブを選択し、[**開始**]をクリックして手動で増分バックアップをトリガーし、バックアップチェーンに追加します。
 
 .. figure:: images/24.png
 
-The second backup job should complete in under 1 minute as there should be minimal delta between the original full backup and the new incremental backup. Note that the full capacity of the VM's disk was processed (40GB), but due to the Change Block Tracking API, only a small amount of data was actually read and transferred to the backup repository. This was also accomplished without having to "stun" the VM to perform a hypervisor level snapshot.
+元の完全バックアップと新しい増分バックアップの差分は最小限であるため、2番目のバックアップジョブは1分以内に完了するはずです。 VMのディスクの全容量が処理された（40GB）ことに注意してください。ただし、Change Block Tracking APIにより、実際に読み取られてバックアップリポジトリに転送されたデータはごくわずかです。 これは、ハイパーバイザーレベルのスナップショットを実行するためにVMを「スタン」する必要がないことも実現しました。
 
 .. note::
 
-  Administrators also have the ability to manually trigger a new, full backup of VMs by selecting a job and clicking **Active Full**. This new full backup would reset the backup chain, and all subsequent incremental backups would use it as a starting point. The previous full backup will remain in the repository until it is removed from the backup chain based on configured retention.
+  管理者は、ジョブを選択して[**アクティブフル**]をクリックすることにより、VMの新しいフルバックアップを手動でトリガーすることもできます。 この新しい完全バックアップはバックアップチェーンをリセットし、その後のすべての増分バックアップはそれを開始点として使用します。 以前の完全バックアップは、構成された保存期間に基づいてバックアップチェーンから削除されるまで、リポジトリに残ります。
 
-Return to the **Dashboard** for a high level overview of the most critical backup metrics for the cluster. While Veeam Backup & Recovery offers a solution for managing backups across a large environment, the AHV Backup Proxy provides a streamlined, HTML5 UI for Nutanix administrators to control their backups and identify key issues that could impact data protection.
+**ダッシュボード**に戻って、クラスターの最も重要なバックアップメトリックの概要を確認します。 Veeam Backup＆Recoveryは、大規模な環境全体でバックアップを管理するためのソリューションを提供しますが、AHVバックアッププロキシは、Nutanix管理者がバックアップを制御し、データ保護に影響する可能性のある主要な問題を特定するための合理化されたHTML5 UIを提供します。
 
 .. figure:: images/25.png
 
-Restoring A VM
+VMのリストア
 ++++++++++++++
 
-Using the Backup Proxy Web Console, you can restore a VM from backup to the Nutanix AHV cluster. With Veeam Backup & Replication v10, it now supports restoring from one Nutanix cluster to another. During the restore process, the Backup Proxy retrieves VM disk data from the backup on the Veeam Backup Repository, copies it to the Storage Container where disks of the original VM were located, and registers a restored VM on the Nutanix AHV cluster.
+バックアッププロキシWebコンソールを使用して、バックアップからNutanix AHVクラスターにVMを復元できます。 Veeam Backup＆Replication v10では、Nutanixクラスター間での復元がサポートされるようになりました。 復元プロセス中に、バックアッププロキシはVeeamバックアップリポジトリのバックアップからVMディスクデータを取得し、元のVMのディスクが配置されていたストレージコンテナーにコピーして、復元されたVMをNutanix AHVクラスターに登録します。
 
-From the **Veeam Back Proxy Web Console**, select **Protected VMs** from the toolbar.
+** Veeam Back Proxy Web Console **で、ツールバーから[** Protected VMs **]を選択します。
 
-Select your test backup VM *Initials*\ **-VeeamBackupTest** and click **Restore**.
+テストバックアップVM * Initials * \ **-VeeamBackupTest **を選択し、[** Restore **]をクリックします。
 
-Using the **Add**, **Remove**, and **Point** options, you can selectively restore the desired VM(s) to a specific time. By default, the VM will be restored based on the most recent backup.
+**追加**、**削除**、および**ポイント**オプションを使用して、目的のVMを特定の時間に選択的に復元できます。 デフォルトでは、VMは最新のバックアップに基づいて復元されます。
 
-Click **Next**.
+[**次へ**]をクリックします。
 
 .. figure:: images/26.png
 
-Select **Restore to a new location** and click **Next** to clone the VM from backup data rather than overwriting the existing VM.
+[** Restore to a new location **]を選択し、[** Next **]をクリックして、既存のVMを上書きするのではなく、バックアップデータからVMのクローンを作成します。
 
-Select *Initials*\ **-VeeamBackupTest** and click **Name VM**. Select **Add suffix**. **Untick** the option "Preserve virtual machine ID" and click **OK > Next**:
+* Initials * \ **-VeeamBackupTest **を選択して、[** Name VM **]をクリックします。 [**サフィックスを追加**]を選択します。 「仮想マシンIDを保持する」オプションの**チェックを外し**、[OK]> [次へ]をクリックします**：
 
 .. figure:: images/27.png
 
-If desired, you can expand the VM and redirect the restored VM to an alternate Nutanix storage container. By default, the VM will be restored to its original storage container.
+必要に応じて、VMを拡張し、復元されたVMを代替のNutanixストレージコンテナーにリダイレクトできます。 デフォルトでは、VMは元のストレージコンテナーに復元されます。
 
-Click **Next**.
+[**次へ**]をクリックします。
 
-If desired, you can expand the network and assign the restored VM to an alternative network on the cluster. For this exercise, leave the default network selected (it should be Secondary). Click **Next**.
+必要に応じて、ネットワークを拡張し、復元したVMをクラスター上の代替ネットワークに割り当てることができます。 この演習では、デフォルトネットワークを選択したままにします（セカンダリネットワークにする必要があります）。 [**次へ**]をクリックします。
 
-Specify a reason for the restore operation and click **Next**.
+復元操作の理由を指定して、[**次へ**]をクリックします。
 
 .. figure:: images/28.png
 
-Click **Finish** and monitor the restore operation until successfully completed.
+[**完了**]をクリックし、正常に完了するまで復元操作を監視します。
 
 .. figure:: images/29.png
 
 .. note::
 
-  If the most recent restore point is selected, the restore operation will complete very rapidly. Veeam will retain the most recent, rolling snapshot of each VM and can restore directly from the local snapshot rather than the backup target storage.
+  最新の復元ポイントが選択されている場合、復元操作は非常に迅速に完了します。 Veeamは、各VMの最新のローリングスナップショットを保持し、バックアップターゲットストレージではなくローカルスナップショットから直接復元できます。
 
-Power on the restored VM in Prism and verify it reflects the latest manual backup.
+Prismで復元されたVMの電源を入れ、最新の手動バックアップを反映していることを確認します。
 
-**Congratulations!** From a single web console you were able to manage and monitor your Veeam backup operations for your Nutanix cluster.
+**おめでとうございます！**単一のWebコンソールから、NutanixクラスターのVeeamバックアップ操作を管理および監視することができました。
 
-In addition to full VM restores, the **Veeam Backup Proxy Web Console** can also restore individual virtual disks which can be mapped to any VM within the cluster. This functionality can be helpful if virtual disks containing data become corrupted (e.g. cryptolocker, virus, etc.).
+完全なVMリストアに加えて、** Veeam Backup Proxy Webコンソール**は、クラスター内の任意のVMにマップできる個々の仮想ディスクをリストアすることもできます。 この機能は、データを含む仮想ディスクが破損した場合（たとえば、cryptolocker、ウイルスなど）に役立ちます。
 
 .. figure:: images/30.png
 
-Try restoring your backup test VM disk directly to your Windows Tools VM!
+バックアップテストVMディスクをWindows Tools VMに直接復元してみてください！
 
-File Level Restore and More
+ファイルレベルリストア
 +++++++++++++++++++++++++++
 
-While the **Veeam Backup Proxy Web Console** delivers all of the basic data protection functionality required by an infrastructure administrator, additional advanced functionality can be accessed on the **Veeam Backup Server** using the **Veeam Backup & Replication Console**.
+** Veeam Backup Proxy Web Console **はインフラストラクチャ管理者が必要とするすべての基本的なデータ保護機能を提供しますが、** Veeam Backup＆Replication Console *を使用して** Veeam Backup Server **で追加の高度な機能にアクセスできます *。
 
-A common use case for restoring data is accessing individual files within a guest that have been inadvertently changed or deleted. Eliminating the need to provision an entire VM to access a single file can significantly decrease the time and resources required.
+データの復元の一般的な使用例は、誤って変更または削除されたゲスト内の個々のファイルにアクセスすることです。 VM全体をプロビジョニングして単一のファイルにアクセスする必要がなくなるため、必要な時間とリソースを大幅に削減できます。
 
-From the *Initials*\ **-VeeamServer** console (or RDP session), open **Veeam Backup & Replication Console**.
+* Initials * \ **-VeeamServer **コンソール（またはRDPセッション）から** Veeam Backup＆Replication Console **を開きます。
 
-From the **Home** tab, expand **Backups**, then click **Disk**. Right-click on the guest VM disk (xyz-VeeamBackupTest) you want to restore an individual file from and select **Restore guest files** > **Microsoft Windows**
+[**ホーム**]タブで[**バックアップ**]を展開し、[**ディスク**]をクリックします。 個々のファイルを復元するゲストVMディスク（xyz-VeeamBackupTest）を右クリックし、[**ゲストファイルの復元**]> [** Microsoft Windows **]を選択します
 
 .. figure:: images/31.png
 
-Select the backup from which you want to restore a file then click **Next**. Optionally provide a Restore reason then click **Next**
+ファイルを復元するバックアップを選択して、[**次へ**]をクリックします。 必要に応じて、復元の理由を入力し、[**次へ**]をクリックします
 
 .. figure:: images/31a.png
 
-Review the File Level Restore Summary then click **Finish**
+ファイルレベルのリストアの概要を確認し、[**完了**]をクリックします
 
 .. figure:: images/31b.png
 
-Veeam will virtually mount the VM disks associated with the backup and display them in the **Backup Browser** app.
+Veeamは、バックアップに関連付けられたVMディスクを仮想的にマウントし、それらを**バックアップブラウザー**アプリに表示します。
 
 .. note::
 
-  You can also explore the file level restore mount locally on the *Initials*\ **-VeeamServer** under ``C:\VeeamFLR``.
+  また、「C：\ VeeamFLR」の下にある* Initials * \ **-VeeamServer **でローカルにファイルレベルの復元マウントを探索することもできます。
 
-Navigate to and select a file you wish to restore. Clicking Right-click and select **Restore**. Note the option to **Overwrite** or **Keep** as well as the option to **Copy To** another location
+復元するファイルに移動して選択します。 右クリックして[**復元**]を選択します。 **上書き**または**保持**のオプションと、別の場所に**コピー先**のオプションに注意してください
 
 .. figure:: images/31c.png
 
-Close the **Backup Browser** to unmount the backup.
+**バックアップブラウザ**を閉じて、バックアップをアンマウントします。
 
-The **Backup Browser** can also be used in conjunction with the **Veeam Explorer** applications to perform application aware restores for Microsoft Active Directory, Exchange, SharePoint, SQL Server, and Oracle workloads.
+**バックアップブラウザ**を** Veeam Explorer **アプリケーションと組み合わせて使用して、Microsoft Active Directory、Exchange、SharePoint、SQL Server、およびOracleワークロードのアプリケーション対応のリストアを実行することもできます。
 
 .. _veeam-objects:
-(Optional) Configuring Nutanix Objects as a Target
+（オプション）Nutanixオブジェクトをターゲットとして構成する
+※2020年6月3日のWorkshopでは事前にObjectsをデプロイしていないので対応できません
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Veeam supports the ability to backup workloads to S3-compatible object store. This is a prime use case for Nutanix Objects and one way in which we accommodate large backup workloads with Nutanix Mine - we size an initial Mine Secondary Storage cluster, and a separate Nutanix Objects cluster which can be configured as a target within Veeam.  Configuring Objects within Veeam is simple and straightforward and there's little to no performance penalty for using on-prem objects relative to using a traditional iSCSI backup target
+Veeamは、ワークロードをS3互換オブジェクトストアにバックアップする機能をサポートしています。 これはNutanixオブジェクトの主要なユースケースであり、Nutanix MINEで大規模なバックアップワークロードに対応する1つの方法です。最初の鉱山セカンダリストレージクラスターと、Veeam内のターゲットとして構成できる別のNutanixオブジェクトクラスターのサイズを決定します。 Veeam内でのオブジェクトの構成はシンプルで簡単であり、従来のiSCSIバックアップターゲットを使用する場合と比較して、オンプレミスオブジェクトを使用してもパフォーマンスがほとんどまたはまったく低下しません
 
-.. note:: To save time, we have already enabled Objects within Prism Central and pre-staged an object store named "ntnx-objects." We will create our Bucket within that object store
+.. note:: 時間を節約するために、Prism Central内でオブジェクトを有効にし、「ntnx-objects」という名前のオブジェクトストアを事前にステージングしました。 そのオブジェクトストア内にバケットを作成します
 
 
-Create Access Keys
+アクセスキーの作成
 -------------------
 
 #. Navigate to Prism Central > Services > Objects
@@ -548,11 +550,11 @@ Create Access Keys
    .. figure:: images/33.png
 
 
-Configuring a Bucket
+バケットの設定
 ---------------------
 
-Since Object Storage uses API keys to grant access to various buckets, we'll want to create a bucket using the API key we just created above.
-A bucket is a sub-repository within an object store which can have policies applied to it, such as versioning, WORM, etc. By default a newly created bucket is a private resource to the creator. The creator of the bucket by default has read/write permissions, and can grant permissions to other users.
+Object StorageはAPIキーを使用してさまざまなバケットへのアクセスを許可するため、上記で作成したAPIキーを使用してバケットを作成します。
+バケットは、バージョン管理、WORMなどのポリシーを適用できるオブジェクトストア内のサブリポジトリです。デフォルトでは、新しく作成されたバケットは作成者に対するプライベートリソースです。 バケットの作成者にはデフォルトで読み取り/書き込み権限があり、他のユーザーに権限を付与できます。
 
 #. Click on your Object Store then click **Create Bucket**
 
