@@ -25,14 +25,13 @@ Nutanix Mineに関するノート
   - Small
   - Medium
   - Scale-out with the option to leverage Nutanix Objects
+
 - 一般的なFoundationは、AHVクラスターをイメージ化および作成するために実行されます
 - "Foundation for Mine"はMINE専用のVMイメージがアップロードされ、AOSとAHVがMineアプライアンスでイメージ化された後に実行されます
 - Foundation for Mine VMは、Standard Foundationと同様のWebインターフェイスを介して自動化します:
-
   - Nutanixコンテナの作成
   - Nutanix Volume Groupの作成
   - MineクラスターへのVeeamバックアップコンポーネントのデプロイ
-
     - Veeam VBR
     - Nutanix Volume GroupsがアタッチされたVeeam Repository VM
     - Veeam Windows プロキシ
@@ -50,9 +49,9 @@ Veeam Backup Serverのデプロイ
 
 Veeamバックアップサーバーは、Veeamバックアップインフラストラクチャの主要な管理コンポーネントです。 Veeam Backup Serverは、バックアップのターゲットとして使用されるVeeamバックアップリポジトリの管理を担当します。 Veeam Backup＆Replication Consoleは、個々のファイル、ADオブジェクト、Exchangeメールボックス、SQL / Oracleデータベースの復元など、VMの詳細な復元操作にも使用されます。
 
-#. ** Prism > VM > Table **を選択し, ** + Create VM ** をクリックしてください。
+#. **Prism > VM > Table** を選択し, **+ Create VM** をクリックしてください。
 
-#. 下記のフィールドを入力し ** Save ** をクリックしてください( *Initials* にはご自身の設定したものと判断できる文字を使ってください):
+#. 下記のフィールドを入力し **Save** をクリックしてください( *Initials* にはご自身の設定したものと判断できる文字を使ってください):
 
    - **Name** - *Initials*\ -VeeamServer
    - **Description** - Veeam Backup & Replication 10
