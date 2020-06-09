@@ -50,9 +50,9 @@ Veeam Backup Serverのデプロイ
 
 Veeamバックアップサーバーは、Veeamバックアップインフラストラクチャの主要な管理コンポーネントです。 Veeam Backup Serverは、バックアップのターゲットとして使用されるVeeamバックアップリポジトリの管理を担当します。 Veeam Backup＆Replication Consoleは、個々のファイル、ADオブジェクト、Exchangeメールボックス、SQL / Oracleデータベースの復元など、VMの詳細な復元操作にも使用されます。
 
-#. In **Prism > VM > Table**, click **+ Create VM**.
+#. ** Prism > VM > Table **を選択し, ** + Create VM ** をクリックしてください。
 
-#. Fill out the following fields and click **Save**:
+#. 下記のフィールドを入力し ** Save ** をクリックしてください( *Initials* にはご自身の設定したものと判断できる文字を使ってください):
 
    - **Name** - *Initials*\ -VeeamServer
    - **Description** - Veeam Backup & Replication 10
@@ -110,37 +110,37 @@ Veeamバックアップサーバーは、Veeamバックアップインフラス�
 
    .. note:: Windows Explorerがディスクのフォーマットを要求する場合があります-上記のPowershellスクリプトレットがディスクをフォーマットするため、このプロンプトをキャンセルできます
 
-#. Veeamサーバーで、スタートメニューを右クリックして、[**システム**]を選択します。 [**ホスト名、ドメイン、ワークグループの設定**]セクションで、[設定の変更]をクリックし、[**変更**]をクリックして、Windows内のサーバーの名前をVM名と一致するように変更します*初期* \ **-VeeamServer ** 。 プロンプトが表示されたら、サーバーを再起動します。
+#. Veeamサーバーで、スタートメニューを右クリックして、[**System**]を選択します。 [**Hostname, domain, and workgroup settings**]セクションで、[Change settings]をクリックし、[**Change**]をクリックして、Windows内のサーバーの名前をVM名と一致するように変更します*初期* \ **-VeeamServer ** 。 プロンプトが表示されたら、サーバーを再起動します。
 
    .. figure:: images/0aa.png
 
-#. マウントされた.isoイメージから** Veeam Backup and Replication 10 **セットアップを開きます（ディスク上の実行可能ファイルSetup.exeを開く必要がある場合があります）。 [**インストール**]をクリックします。
+#. マウントされた.isoイメージから** Veeam Backup and Replication 10 **セットアップを開きます（ディスク上の実行可能ファイルSetup.exeを開く必要がある場合があります）。 [**Install**]をクリックします。
 
    .. figure:: images/0a.png
 
    インストーラーはいくつかの前提条件をインストールし、再起動が必要な場合があります。 プロンプトに従って、Veeam Backup and Replication Serverをインストールします。
 
-#. 使用許諾契約に同意し、[**次へ**]をクリックします。
+#. 使用許諾契約に同意し、[** Next **]をクリックします。
 
 #. `こちら<http://10.42.194.11/images/Veeam/VBRv10RTM/Veeam-100instances-suite-nfr.lic>` _にあるVeeam Backup and Replication ServerのNFRライセンスをダウンロードします。ローカルにファイルをダウンロードできます 次に、ファイルをコピーしてRDPセッションに貼り付けます
 
-#. [**参照**]をクリックして、ダウンロードしたVeeam NFRライセンスファイルを選択します。 [**次へ]> [次へ**]をクリックします。
+#. [**Browse**]をクリックして、ダウンロードしたVeeam NFRライセンスファイルを選択します。 [**Next]> [Next**]をクリックします。
 
-#. 欠落している必須コンポーネントを要求されたら、[**インストール**]をクリックします。 完了したら、[**次へ**]をクリックします。
+#. 欠落している必須コンポーネントを要求されたら、[**Install**]をクリックします。 完了したら、[** Next **]をクリックします。
 
    .. figure:: images/0b.png
 
-#. 設定を確認し、[**インストール**]をクリックします。
+#. 設定を確認し、[**Install**]をクリックします。
 
    .. figure:: images/0c.png
 
-#. インストールが完了する間、Veeam VBRサーバーに必要なDNSエントリを作成できます。 AutoADのコンソールを開き、管理者の資格情報を使用してログインします:
+#. インストールが完了するまでの間、Veeam VBRサーバーに必要なDNSエントリを作成します。 AutoADのコンソールを開き、管理者の資格情報を使用してログインします:
      - **Username:** Administrator
      - **Password:** nutanix/4u
 
-#. [スタート]> [Windows管理ツール]> [DNS]に移動して、DNSコンソールを開きます。 DC>前方参照ゾーン> ntnxlab.localに移動します。
+#. [Start]> [Windows Administration Tools]> [DNS]に移動して、DNSコンソールを開きます。 DC>Forward Lookup Zones> ntnxlab.localに移動します。
 
-#. DHCPを介して割り当てられたIPアドレスと一致するxyz-VeeamServerのAレコードを作成します。 「関連ポインター（PTR）レコードの作成」をチェックします。※2020年6月3日のラボでは逆引きゾーンが作成されていないので手動で作成するか無視してください。
+#. DHCPを介して割り当てられたIPアドレスと一致するxyz-VeeamServerのAレコードを作成します。 「Create associated pointer (PTR) record」をチェックします。※事前にReverse Lookup Zonesが作成されていないとエラーが表示されます。
 
    .. figure:: images/0d.png
 
@@ -206,7 +206,7 @@ v10でリリースされた新機能は次のとおりです:
 AHVバックアッププロキシの展開
 ------------------------------
 
-#. Nutanixクラスタから、[設定]> [ローカルユーザー管理]に移動し、[+新しいユーザー]を選択します。 「xyzveeam」という名前のローカルユーザーを作成します。ここで、xyzはイニシャルです:
+#. Nutanixクラスタから、[Settings]> [Local User Management]に移動し、[+New User]を選択します。 「xyzveeam」という名前のローカルユーザーを作成します。ここで、xyzはイニシャルです:
 
    - User: xyzveeam
    - Password: nutanix/4u
@@ -215,37 +215,37 @@ AHVバックアッププロキシの展開
    - E-mail: xyz-veeam@ntnxlab.local
 
 
-#. ユーザーに*クラスタ管理者*権限を付与し、[保存]をクリックします
+#. ユーザーに*Cluster Admin*権限を付与し、[Save]をクリックします
 
    .. figure:: images/0.png
 
 #. リモートデスクトップまたはVMコンソールを使用して、以前に展開したVeeam VBR VMに接続し、Veeamバックアップおよびレプリケーションコンソールを起動します。
 
-#. 「バックアップインフラストラクチャ」に移動します
+#. 「Backup Infrastructure」に移動します
 
-#. [管理対象サーバー]で、[管理対象サーバー]を右クリックし、[サーバーの追加]を選択します
+#. [Managed Servers]で、[Managed Servers]を右クリックし、[Add Server]を選択します
 
    .. figure:: images/2.png
 
 #. 「Nutanix AHV」をクリックします
 
-#. クラスタのIPアドレスを入力し、[次へ]をクリックします。
+#. クラスタのIPアドレスを入力し、[Next]をクリックします。
 
    .. figure:: images/3.png
 
-#. 資格情報については、[追加...]をクリックします
+#. 資格情報については、[Add...]をクリックします
 
-#. Nutanixクラスター（xyzveeam / nutanix / 4u）で前に指定した資格情報を入力します。 [OK]をクリックし、[次へ]>
+#. Nutanixクラスター（xyzveeam / nutanix/4u）で前に指定した資格情報を入力します。 [OK]をクリックし、[Next]>
 
    .. figure:: images/5.png
 
-   .. note:: VeeamサーバーがPrismに接続すると、セキュリティ警告が表示されます。 [**続行**]をクリックします
+   .. note:: VeeamサーバーがPrismに接続すると、セキュリティ警告が表示されます。 [**Continue**]をクリックします。
 
-#. デフォルトのストレージコンテナを選択し、右側の[選択]ボタンを使用してネットワークを[セカンダリ]に変更します。 このペインでは静的IPアドレスを指定する必要がないため、[次へ]をクリックします。
+#. デフォルトのストレージコンテナを選択し、右側の[Choose]ボタンを使用してネットワークを[Secondary]に変更します。 このペインでは静的IPアドレスを指定する必要がないため、[Next]をクリックします。
 
    .. figure:: images/6.png
 
-#. VBRは、Nutanixクラスターを管理対象サーバーとして追加します。 完了したら、[次へ]をクリックします>
+#. VBRは、Nutanixクラスターを管理対象サーバーとして追加します。 完了したら、[Next]をクリックします>
 
    .. figure:: images/7.png
 
@@ -257,7 +257,7 @@ AHVバックアッププロキシの展開
 
 #. Prismから[** + Create VM **]をクリックして、新しいVMを作成します。
 
-#. 次のフィールドに入力して、[**保存**]をクリックします:
+#. 次のフィールドに入力して、[**Save**]をクリックします:
 
    - **Name** - *Initials*\ -VeeamAHVProxy
    - **vCPU(s)** - 4
@@ -295,7 +295,7 @@ AHVバックアッププロキシの展開
    .. figure:: images/installproxy1.png
 
 
-#. EULAに同意して[次へ]をクリックします
+#. EULAに同意して[Next]をクリックします
 
 #. ユーザー** veeam **の新しい資格情報を指定します:
 
@@ -310,13 +310,13 @@ AHVバックアッププロキシの展開
 
    .. figure:: images/installproxy3.png
 
-#. 概要を確認し、[完了]をクリックします。 AHVプロキシアプライアンスは設定を適用し、リロードします。
+#. 概要を確認し、[Finish]をクリックします。 AHVプロキシアプライアンスは設定を適用し、リロードします。
 
-#. Veeam Server Windowsセッション内のVeeam Backup and Replication Consoleに戻ります。 [バックアップインフラストラクチャ]をクリックし、[**バックアッププロキシ**]を右クリックして[** Nutanixバックアッププロキシを追加... **]を選択します。
+#. Veeam Server Windowsセッション内のVeeam Backup and Replication Consoleに戻ります。 [Backup Infrastructure]をクリックし、[**Backup Proxies**]を右クリックして[** Add Nutanix backup proxy... **]を選択します。
 
    .. figure:: images/10.png
 
-#. [**プロキシを接続**]を選択します
+#. [**Connect proxy**]を選択します
 
    .. figure:: images/10a.png
 
@@ -329,7 +329,7 @@ AHVバックアッププロキシの展開
 
 #. デフォルトのネットワークオプションをそのままにして、[** Next> **]をクリックします。
 
-#. [**追加。**]をクリックして、バックアッププロキシの認証情報を追加します:
+#. [**Add..**]をクリックして、バックアッププロキシの認証情報を追加します:
 
    - **Username:** veeam
    - **Password:** nutanix/4u
@@ -342,13 +342,13 @@ AHVバックアッププロキシの展開
 
    .. note:: VeeamサーバーがPrismに接続すると、セキュリティ警告が表示されます。 [**続行**]をクリックします
 
-#. VBRは、展開したAHVバックアッププロキシを追加します。 [**次へ> **]をクリックします
-クラスタを複数で共有している場合、プロキシの接続はクラスタあたり1台になりますので1名を除いてエラーが出ます。
-これ以降の手順ではプロキシを接続できたVBRを利用しますので接続できた方はインストラクターにIPアドレスと認証情報を共有してください。
+#. VBRは、展開したAHVバックアッププロキシを追加します。 [**Next> **]をクリックします
 
    .. figure:: images/13.png
 
-#. 概要画面で[**完了**]をクリックします
+   .. note:: クラスタを複数人でシェアしている場合、最初の一人以外はエラーが発生します。これ以降の手順ではプロキシを接続できた方のVBR環境を共有で利用してください。”接続できた方はインストラクターにIPアドレスと認証情報を共有してください。”
+
+#. 概要画面で[**Finish**]をクリックします
 
 
 VMのバックアップ
@@ -360,7 +360,7 @@ AHV VMの場合、Veeam Backup＆ReplicationバックアッププロキシはVM�
 
 #. ** Prism> VM> Table **で、[** + Create VM **]をクリックします。
 
-#. 次のフィールドに入力して、[**保存**]をクリックします:
+#. 次のフィールドに入力して、[**Save**]をクリックします:
 
    - **Name** - *Initials*\ -VeeamBackupTest
    - **vCPU(s)** - 2
@@ -388,11 +388,13 @@ AHV VMの場合、Veeam Backup＆ReplicationバックアッププロキシはVM�
 
    .. figure:: images/18.png
 
-#. [** +追加**]をクリックし、バックアップジョブの名前（* Initials * \ -DevVMsなど）を入力し、デフォルトのオプションである[バックアップジョブ]のままにして、[**次へ**]をクリックします。
+   .. note:: 複数人でクラスタをシェアしている場合、プロキシ設定が最初に完了した方のVBRコンソールのIPアドレスを入力してください。
+
+#. [** +Add**]をクリックし、バックアップジョブの名前（* Initials * \ -DevVMsなど）を入力し、デフォルトのオプションである[バックアップジョブ]のままにして、[** Next **]をクリックします。
 
    .. figure:: images/19.png
 
-#. [** +追加**]をクリックして、この演習用に作成したVMを検索します。 ** [追加]> [次へ**]をクリックします。
+#. [** +Add**]をクリックして、この演習用に作成したVMを検索します。 ** [Add]> [Next**]をクリックします。
 
    .. figure:: images/20.png
 
@@ -400,11 +402,11 @@ AHV VMの場合、Veeam Backup＆ReplicationバックアッププロキシはVM�
 
   動的モードでは、Nutanix保護ドメイン内のすべてのVMをバックアップできます。 これにより、すでにNutanix PDを利用している場合、バックアップジョブの構成が簡単になります。また、PDに追加されたすべての新しいVMが、ジョブを変更せずにVeeamによってバックアップされるようになります。
 
-[**デフォルトのバックアップリポジトリ**]を選択し、[**次へ**]をクリックします。 これは、* Initials * \ **-VeeamServer ** VMに接続されている250GBのディスクですが、環境で使用可能な場合は、サポートされている他のVeeamバックアップリポジトリを選択できます。
+[**Default Backup Repository**]を選択し、[** Next **]をクリックします。 これは、* Initials * \ **-VeeamServer ** VMに接続されている250GBのディスクですが、環境で使用可能な場合は、サポートされている他のVeeamバックアップリポジトリを選択できます。
 
 .. figure:: images/21.png
 
-次のフィールドに入力して、[**次へ**]をクリックします。:
+次のフィールドに入力して、[** Next **]をクリックします。:
 
 - Select **Run this job automatically**
 - Select **Periodically every:**
@@ -414,29 +416,29 @@ AHV VMの場合、Veeam Backup＆ReplicationバックアッププロキシはVM�
 
 .. figure:: images/22.png
 
-[**完了をクリックしたらバックアップジョブを実行する**]を選択し、[**終了**]をクリックします。
+[**Run backup job when I click Finish**]を選択し、[**Finish**]をクリックします。
 
-最初の完全バックアップが正常に完了するまでの進行状況を監視します。 最初のバックアップには約2〜5分かかります。 [**閉じる**]をクリックします。
+最初の完全バックアップが正常に完了するまでの進行状況を監視します。 最初のバックアップには約2〜5分かかります。 [**Close**]をクリックします。
 
 .. figure:: images/23.png
 
 .. note::
 
-  バックアップジョブを中断せずに[**閉じる**]をクリックできます。 ジョブの進行状況を再度表示するには、バックアップジョブの[**ステータス**]の下にある[**実行中**]リンクをクリックします。
+  バックアップジョブを中断せずに[**Close**]をクリックできます。 ジョブの進行状況を再度表示するには、バックアップジョブの[**Status**]の下にある[**Running**]リンクをクリックします。
 
 * Initials * \ **-VeeamBackupTest ** VMコンソールに戻り、いくつかの小さな変更（インターネットからの壁紙画像のダウンロード、アプリケーションのインストールなど）を行います。
 
-** Veeam Backup Proxy Webコンソール>バックアップジョブ**からジョブを選択し、[**開始**]をクリックして手動で増分バックアップをトリガーし、バックアップチェーンに追加します。
+** Veeam Backup Proxy Webコンソール > Backup Jobs**からジョブを選択し、[**Start**]をクリックして手動で増分バックアップをトリガーし、バックアップチェーンに追加します。
 
 .. figure:: images/24.png
 
-元の完全バックアップと新しい増分バックアップの差分は最小限であるため、2番目のバックアップジョブは1分以内に完了するはずです。 VMのディスクの全容量が処理された（40GB）ことに注意してください。ただし、Change Block Tracking APIにより、実際に読み取られてバックアップリポジトリに転送されたデータはごくわずかです。 これは、ハイパーバイザーレベルのスナップショットを実行するためにVMを「スタン」する必要がないことも実現しました。
+元の完全バックアップと新しい増分バックアップの差分は最小限であるため、2番目のバックアップジョブは1分以内に完了するはずです。 VMのディスクの全容量が処理された（40GB）ことに注意してください。ただし、Change Block Tracking APIにより、実際に読み取られてバックアップリポジトリに転送されたデータはごくわずかです。 これは、ハイパーバイザーレベルのスナップショットを実行するためにVMを「一時停止」する必要がないことも実現しました。
 
 .. note::
 
-  管理者は、ジョブを選択して[**アクティブフル**]をクリックすることにより、VMの新しいフルバックアップを手動でトリガーすることもできます。 この新しい完全バックアップはバックアップチェーンをリセットし、その後のすべての増分バックアップはそれを開始点として使用します。 以前の完全バックアップは、構成された保存期間に基づいてバックアップチェーンから削除されるまで、リポジトリに残ります。
+  管理者は、ジョブを選択して[**Active Full**]をクリックすることにより、VMの新しいフルバックアップを手動でトリガーすることもできます。 この新しい完全バックアップはバックアップチェーンをリセットし、その後のすべての増分バックアップはそれを開始点として使用します。 以前の完全バックアップは、構成された保存期間に基づいてバックアップチェーンから削除されるまで、リポジトリに残ります。
 
-**ダッシュボード**に戻って、クラスターの最も重要なバックアップメトリックの概要を確認します。 Veeam Backup＆Recoveryは、大規模な環境全体でバックアップを管理するためのソリューションを提供しますが、AHVバックアッププロキシは、Nutanix管理者がバックアップを制御し、データ保護に影響する可能性のある主要な問題を特定するための合理化されたHTML5 UIを提供します。
+**Dashboard**に戻って、クラスターの最も重要なバックアップメトリックの概要を確認します。 Veeam Backup＆Recoveryは、大規模な環境全体でバックアップを管理するためのソリューションを提供しますが、AHVバックアッププロキシは、Nutanix管理者がバックアップを制御し、データ保護に影響する可能性のある主要な問題を特定するための合理化されたHTML5 UIを提供します。
 
 .. figure:: images/25.png
 
@@ -449,29 +451,29 @@ VMのリストア
 
 テストバックアップVM * Initials * \ **-VeeamBackupTest **を選択し、[** Restore **]をクリックします。
 
-**追加**、**削除**、および**ポイント**オプションを使用して、目的のVMを特定の時間に選択的に復元できます。 デフォルトでは、VMは最新のバックアップに基づいて復元されます。
+**Add**、**Remove**、および**Point**オプションを使用して、目的のVMを特定の時間に選択的に復元できます。 デフォルトでは、VMは最新のバックアップに基づいて復元されます。
 
-[**次へ**]をクリックします。
+[** Next **]をクリックします。
 
 .. figure:: images/26.png
 
 [** Restore to a new location **]を選択し、[** Next **]をクリックして、既存のVMを上書きするのではなく、バックアップデータからVMのクローンを作成します。
 
-* Initials * \ **-VeeamBackupTest **を選択して、[** Name **]をクリックします。 [**サフィックスを追加**]を選択します。 「Preserve virtual machine ID」オプションの**チェックを外し**、[OK]> [次へ]をクリックします**：
+* Initials * \ **-VeeamBackupTest **を選択して、[** Name **]をクリックします。 [**Add suffix**]を選択します。 「Preserve virtual machine ID」オプションの**チェックを外し**、[OK]> [Next]をクリックします**：
 
 .. figure:: images/27.png
 
 必要に応じて、VMを拡張し、復元されたVMを代替のNutanixストレージコンテナーにリダイレクトできます。 デフォルトでは、VMは元のストレージコンテナーに復元されます。
 
-[**次へ**]をクリックします。
+[** Next **]をクリックします。
 
-必要に応じて、ネットワークを拡張し、復元したVMをクラスター上の代替ネットワークに割り当てることができます。 この演習では、デフォルトネットワークを選択したままにします（セカンダリネットワークにする必要があります）。 [**次へ**]をクリックします。
+必要に応じて、ネットワークを拡張し、復元したVMをクラスター上の代替ネットワークに割り当てることができます。 この演習では、デフォルトネットワークを選択したままにします（セカンダリネットワークにする必要があります）。 [** Next **]をクリックします。
 
-復元操作の理由を指定して、[**次へ**]をクリックします。
+復元操作の理由を指定して、[** Next **]をクリックします。
 
 .. figure:: images/28.png
 
-[**完了**]をクリックし、正常に完了するまで復元操作を監視します。
+[**Finish**]をクリックし、正常に完了するまで復元操作を監視します。
 
 .. figure:: images/29.png
 
@@ -498,39 +500,36 @@ Prismで復元されたVMの電源を入れ、最新の手動バックアップ�
 
 * Initials * \ **-VeeamServer **コンソール（またはRDPセッション）から** Veeam Backup＆Replication Console **を開きます。
 
-[**ホーム**]タブで[**バックアップ**]を展開し、[**ディスク**]をクリックします。 個々のファイルを復元するゲストVMディスク（xyz-VeeamBackupTest）を右クリックし、[**ゲストファイルの復元**]> [** Microsoft Windows **]を選択します
+[** Home **]タブで[** Backups **]を展開し、[** Disk **]をクリックします。 個々のファイルを復元するゲストVMディスク（xyz-VeeamBackupTest）を右クリックし、[** Restore guest files **]> [** Microsoft Windows **]を選択します
 
 .. figure:: images/31.png
 
-ファイルを復元するバックアップを選択して、[**次へ**]をクリックします。 必要に応じて、復元の理由を入力し、[**次へ**]をクリックします
+ファイルを復元するバックアップを選択して、[** Next **]をクリックします。 必要に応じて、復元の理由を入力し、[** Next **]をクリックします
 
 .. figure:: images/31a.png
 
-ファイルレベルのリストアの概要を確認し、[**完了**]をクリックします
+ファイルレベルのリストアの概要を確認し、[** Finish **]をクリックします
 
 .. figure:: images/31b.png
 
-Veeamは、バックアップに関連付けられたVMディスクを仮想的にマウントし、それらを**バックアップブラウザー**アプリに表示します。
+Veeamは、バックアップに関連付けられたVMディスクを仮想的にマウントし、それらを**Backup Browser**アプリに表示します。
 
 .. note::
 
   また、「C：\ VeeamFLR」の下にある* Initials * \ **-VeeamServer **でローカルにファイルレベルの復元マウントを探索することもできます。
 
-復元するファイルに移動して選択します。 右クリックして[**復元**]を選択します。 **上書き**または**保持**のオプションと、別の場所に**コピー先**のオプションに注意してください
+復元するファイルに移動して選択します。 右クリックして[**Restore**]を選択します。 ** Overwrite **または** Keep **のオプションと、別の場所に** Copy To **のオプションに注意してください
 リストアするVMのWindows Firewallが無効化できていない場合はクレデンシャル入力後に接続エラーがでます、手動でリストア対象のVMにログインしてFirewallを無効化してください。
 
 .. figure:: images/31c.png
 
-**バックアップブラウザ**を閉じて、バックアップをアンマウントします。
+**Backup Browser**を閉じて、バックアップをアンマウントします。
 
-**バックアップブラウザ**を** Veeam Explorer **アプリケーションと組み合わせて使用して、Microsoft Active Directory、Exchange、SharePoint、SQL Server、およびOracleワークロードのアプリケーション対応のリストアを実行することもできます。
+**Backup Browser**を** Veeam Explorer **アプリケーションと組み合わせて使用して、Microsoft Active Directory、Exchange、SharePoint、SQL Server、およびOracleワークロードのアプリケーション対応のリストアを実行することもできます。
 
 .. _veeam-objects:
-
-（オプション）Nutanixオブジェクトをターゲットとして構成する
-+++++++++++++++++++++++++++
-
-2020年6月3日のWorkshopでは事前にObjectsをデプロイしていないので対応できません。
+(オプション) ターゲットとしてのNutanixオブジェクトの設定
+++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Veeamは、ワークロードをS3互換オブジェクトストアにバックアップする機能をサポートしています。 これはNutanixオブジェクトの主要なユースケースであり、Nutanix MINEで大規模なバックアップワークロードに対応する1つの方法です。最初の鉱山セカンダリストレージクラスターと、Veeam内のターゲットとして構成できる別のNutanixオブジェクトクラスターのサイズを決定します。 Veeam内でのオブジェクトの構成はシンプルで簡単であり、従来のiSCSIバックアップターゲットを使用する場合と比較して、オンプレミスオブジェクトを使用してもパフォーマンスがほとんどまたはまったく低下しません
 
@@ -561,11 +560,11 @@ Veeamは、ワークロードをS3互換オブジェクトストアにバック�
 Object StorageはAPIキーを使用してさまざまなバケットへのアクセスを許可するため、上記で作成したAPIキーを使用してバケットを作成します。
 バケットは、バージョン管理、WORMなどのポリシーを適用できるオブジェクトストア内のサブリポジトリです。デフォルトでは、新しく作成されたバケットは作成者に対するプライベートリソースです。 バケットの作成者にはデフォルトで読み取り/書き込み権限があり、他のユーザーに権限を付与できます。
 
-#. Click on your Object Store then click **Create Bucket**
+#. Object Storeをクリックしてから、 ** Create Bucket **
 
    .. figure:: images/buckets-1.png
 
-#. Name the bucket *INITIALS*-**veeam-bucket** > click **Create**
+#. バケットに *INITIALS*-** veeam-bucket ** という名前をつけ ** Create ** をクリックします
 
    .. note::
 
@@ -575,49 +574,49 @@ Object StorageはAPIキーを使用してさまざまなバケットへのアク
 
    .. figure:: images/buckets-2.png
 
-#. Click on the bucket you just created, then click **Edit User Access**
+#. 作成したバケットをクリックし、 ** Edit User Access ** をクリックします
 
    .. figure:: images/buckets-3.png
 
    .. figure:: images/buckets-4.png
 
-#. Find your user and give it **Read and Write** access
+#. ユーザーを検索し ** Read and Write ** アクセスを付与します
 
    .. figure:: images/buckets-5.png
 
 VeeamにNutanix Objectsを設定
 ---------------------------------------
 
-#. Within the Veeam VBR console click on **Backup Infrastructure** > **Backup Repositories**.
+#. Veeam VBRコンソールで ** Backup Infrastructure ** > ** Backup Repositories ** をクリックします
 
    .. figure:: images/36.png
 
-#. Right-click on Backup Repositories and choose **Add Backup Repository** and select "Object storage"
+#. Backup Repositoriesを右クリック、 ** Add Backup Repository ** を選択し、 "Object storage" をクリックします
 
    .. figure:: images/37.png
 
-#. Choose "S3 Compatible". Whem prompted, specify a Name for the new Object Storage Repository that matches the bucket you created earlier - *Initials*veeam-bucket, then click **Next>**
+#. "S3 Compatible"を選択します。 プロンプトが表示されたら、前に作成したバケットと一致する新しいオブジェクトストレージリポジトリの名前を指定します - *Initials*veeam-bucket, その後 ** Next> ** をクリックします
 
 
-#. For the Account section, specify the information as noted below:
+#. Accountセクションで、次のように情報を指定します:
 
    - Service Point: https://<IP of Object Store Client IP>
    - Region: <leave default>
-   - Credentials: Click **Add** > Enter Access key and Secret key, which are in the file previously downloaded when creating the Bucket in Nutanix Objects
+   - Credentials: Click ** Add ** > Enter Access key and Secret key, which are in the file previously downloaded when creating the Bucket in Nutanix Objects
 
-   .. note:: You can locate the Service Point address from Objects by connecting to Prism Central navigating to **Services** > **Objects**. Within the table, you will find the "Client Used IPs" which is the Service Endpoint
+   .. note:: ** Services ** > ** Objects **に移動してPrism Centralに接続すると、オブジェクトからサービスポイントアドレスを見つけることができます。 テーブル内には、サービスエンドポイントである「Client Used IPs」があります。
 
       .. figure:: images/38.png
 
    .. figure:: images/39.png
 
-   Click Next> and accept any Certificate Security Alerts
+    Next> をクリックして、証明書のセキュリティ警告を受け入れます
 
-#. You should be able to see the bucket you created in the last section.  Click "Browse" for Folder and create a new folder named "backup"
+#. 前のセクションで作成したバケットが表示されるはずです。 フォルダの「Browse」をクリックして、「バックアップ」という名前の新しいフォルダを作成します
 
    .. figure:: images/40.png
 
-#. Click Finish
+#. Finishをクリックします
 
 Nutanixオブジェクトをアーカイブ層として活用するようにバックアップジョブを構成できるようになりました。
 
