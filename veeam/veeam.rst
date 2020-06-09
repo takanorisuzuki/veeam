@@ -109,23 +109,23 @@ Veeamバックアップサーバーは、Veeamバックアップインフラス�
 
    .. note:: Windows Explorerがディスクのフォーマットを要求する場合があります-上記のPowershellスクリプトレットがディスクをフォーマットするため、このプロンプトをキャンセルできます
 
-#. Veeamサーバーで、スタートメニューを右クリックして、[**System**]を選択します。 [**Hostname, domain, and workgroup settings**]セクションで、[Change settings]をクリックし、[**Change**]をクリックして、Windows内のサーバーの名前をVM名と一致するように変更します*初期* \ **-VeeamServer ** 。 プロンプトが表示されたら、サーバーを再起動します。
+#. Veeamサーバーで、スタートメニューを右クリックして、[**System**]を選択します。 [**Hostname, domain, and workgroup settings**]セクションで、[**Change settings**]をクリックし、[**Change**]をクリックして、Windows内のサーバーの名前をVM名と一致するように変更します (*Initials* \ **-VeeamServer ** ) プロンプトが表示されたら、サーバーを再起動します。
 
    .. figure:: images/0aa.png
 
-#. マウントされた.isoイメージから** Veeam Backup and Replication 10 **セットアップを開きます（ディスク上の実行可能ファイルSetup.exeを開く必要がある場合があります）。 [**Install**]をクリックします。
+#. マウントされた.isoイメージから **Veeam Backup and Replication 10** セットアップを開きます（ディスク上の実行可能ファイルSetup.exeを開く必要がある場合があります）。 [**Install**]をクリックします。
 
    .. figure:: images/0a.png
 
    インストーラーはいくつかの前提条件をインストールし、再起動が必要な場合があります。 プロンプトに従って、Veeam Backup and Replication Serverをインストールします。
 
-#. 使用許諾契約に同意し、[** Next **]をクリックします。
+#. 使用許諾契約に同意し、[**Next**]をクリックします。
 
 #. `こちら<http://10.42.194.11/images/Veeam/VBRv10RTM/Veeam-100instances-suite-nfr.lic>` _にあるVeeam Backup and Replication ServerのNFRライセンスをダウンロードします。ローカルにファイルをダウンロードできます 次に、ファイルをコピーしてRDPセッションに貼り付けます
 
-#. [**Browse**]をクリックして、ダウンロードしたVeeam NFRライセンスファイルを選択します。 [**Next]> [Next**]をクリックします。
+#. [**Browse**]をクリックして、ダウンロードしたVeeam NFRライセンスファイルを選択します。 [**Next**] > [**Next**]をクリックします。
 
-#. 欠落している必須コンポーネントを要求されたら、[**Install**]をクリックします。 完了したら、[** Next **]をクリックします。
+#. 欠落している必須コンポーネントを要求されたら、[**Install**]をクリックします。 完了したら、[**Next**]をクリックします。
 
    .. figure:: images/0b.png
 
@@ -137,11 +137,13 @@ Veeamバックアップサーバーは、Veeamバックアップインフラス�
      - **Username:** Administrator
      - **Password:** nutanix/4u
 
-#. [Start]> [Windows Administration Tools]> [DNS]に移動して、DNSコンソールを開きます。 DC>Forward Lookup Zones> ntnxlab.localに移動します。
+#. [**Start**] > [**Windows Administration Tools**] > [**DNS**]に移動して、DNSコンソールを開きます。 [**DC**] > [**Forward Lookup Zones**] > [**ntnxlab.local**] に移動します。
 
-#. DHCPを介して割り当てられたIPアドレスと一致するxyz-VeeamServerのAレコードを作成します。 「Create associated pointer (PTR) record」をチェックします。※事前にReverse Lookup Zonesが作成されていないとエラーが表示されます。
+#. DHCPを介して割り当てられたIPアドレスと一致する **xyz-VeeamServer** のAレコードを作成します。 「**Create associated pointer (PTR) record**」をチェックします。
 
    .. figure:: images/0d.png
+
+   .. note:: 事前に **Reverse Lookup Zones** が存在していないとエラーが表示されます。
 
 #. インストールが完了したら、Veeam Nutanix AHVプラグインをVeeam Backup and Replication Serverにインストールする必要があります。 この `リンク<http://10.42.194.11/images/Veeam/VBRv10RTM/NutanixAHVPlugin_10.0.0.908.exe>` _を使用して、プラグインをxyz-VeeamServerにダウンロードできます。
 
@@ -151,7 +153,7 @@ Veeamバックアップサーバーは、Veeamバックアップインフラス�
 
 デフォルトでは、Veeam Backup ServerはWindows SQL Server Expressデータベースインスタンスをデプロイします。 本番Veeamデプロイメントでは、外部の高可用性データベースを使用します。
 
-インストーラーは、バックアップターゲットとして機能するVeeamバックアップリポジトリも作成します。デフォルトでは、バックアップサーバーに公開されている空き容量が最も多いボリュームが選択されます（* Initials * \ **-VeeamServer *に追加されたローカル250GBディスク） * VM）。
+インストーラーは、バックアップターゲットとして機能するVeeamバックアップリポジトリも作成します。デフォルトでは、バックアップサーバーに公開されている空き容量が最も多いボリュームが選択されます（*Initials*\ **-VeeamServer** に追加された250GBのローカルディスク）。
 
 Nutanix AHV VMのバックアップを保存するために、Veeamは現在、単純なバックアップリポジトリ（Windows互換のファイルまたはブロックストレージ）、スケールアウトバックアップリポジトリ、およびExaGridアプライアンスの使用をサポートしています。 v10のリリースにより、DellEMC Data Domain DD BoostおよびHPE StoreOnce Catalyst独自のストレージプロトコルが、Veeam Availability for Nutanixでサポートされるようになりました。
 
