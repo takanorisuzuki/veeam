@@ -168,16 +168,62 @@ Credentials
 アクセス手順
 +++++++++++++++++++
 
+NutanixのHPOC環境にはさまざまな方法でアクセスできます。
+
 ラボアクセスユーザー情報
 ...........................
 
-**Username:** PHX-POCxxx-User01からPHX-POCxxx-User20, **Password:** *<Provided by Instructor>*
+PHX Based Clusters:
+**ユーザー名:** PHX-POCxxx-User01 (最大PHX-POCxxx-User20), **パスワード:** *<インストラクターから提示します>*
 
+RTP Based Clusters:
+**ユーザー名:** RTP-POCxxx-User01 (最大RTP-POCxxx-User20), **パスワード:** *<インストラクターから提示します>*
 
 Frame VDI
 .........
 
 ログイン先: https://frame.nutanix.com/x/labs
+
+**Nutanix社員** - 個人の **NUTANIXDC** IDとパスワードを利用してください
+**その他のユーザー** - 上記の **ラボアクセスユーザー情報** を利用してください
+
+Parallels VDI
+.................
+
+PHXのクラスタの場合はこちらにログインしてください: https://xld-uswest1.nutanix.com
+
+RTPのクラスタの場合はこちらにログインしてください: https://xld-useast1.nutanix.com
+
+**Nutanix社員** - 個人の **NUTANIXDC** IDとパスワードを利用してください
+**その他のユーザー** - 上記の **ラボアクセスユーザー情報** を利用してください
+
+社員向けPulse Secure VPN
+..........................
+
+クライアントダウンロード:
+
+PHXのクラスタの場合はこちらにログインしてください: https://xld-uswest1.nutanix.com
+
+RTPのクラスタの場合はこちらにログインしてください: https://xld-useast1.nutanix.com
+
+**Nutanix社員** - 個人の **NUTANIXDC** IDととパスワードを利用してください
+**その他のユーザー** - 上記の **ラボアクセスユーザー情報** を利用してください
+
+ダウンロードしたクライアントソフトウェアをインストールします。
+
+Pulse Secure Clientの中で接続さきを **Add** してください:
+
+PHXに接続する場合:
+
+- **Type** - Policy Secure (UAC) または、 Connection Server
+- **Name** - X-Labs - PHX
+- **Server URL** - xlv-uswest1.nutanix.com
+
+RTPに接続する場合:
+
+- **Type** - Policy Secure (UAC) または Connection Server
+- **Name** - X-Labs - RTP
+- **Server URL** - xlv-useast1.nutanix.com
 
 ソフトウェアバージョン
 ++++++++++++++++++++
